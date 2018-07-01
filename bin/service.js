@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
+const path_1 = __importDefault(require("path"));
 const util_1 = require("util");
 const mongodb_1 = require("mongodb");
 const express_1 = __importDefault(require("express"));
@@ -77,7 +78,12 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 }
             });
         });
-        // now handle routes with express
+        // Handle favicon requests - using the BCBST favicon.ico
+        app.get('/favicon.ico', (req, res) => {
+            res.setHeader('Content-Type', 'image/x-icon');
+            res.status(200).sendFile(path_1.default.resolve('views/favicon.ico'));
+        }); // route: /favicon.ico
+        // now handle all remaining routes with express
         app.get('/*', (req, res) => {
             log.debug(__filename, req.path, 'Invalid path in URL.');
             res.setHeader('Content-Type', 'text/html');

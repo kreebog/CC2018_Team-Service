@@ -1,4 +1,5 @@
 require('dotenv').config();
+import path from 'path';
 import { format } from 'util';
 import { MongoClient } from 'mongodb';
 import express from 'express';
@@ -87,7 +88,13 @@ MongoClient.connect(DB_URL, (err, client) => {
             });
         });
 
-        // now handle routes with express
+        // Handle favicon requests - using the BCBST favicon.ico
+        app.get('/favicon.ico', (req, res) => {
+            res.setHeader('Content-Type', 'image/x-icon');
+            res.status(200).sendFile(path.resolve('views/favicon.ico'));
+        }); // route: /favicon.ico
+
+        // now handle all remaining routes with express
         app.get('/*', (req, res) => {
             log.debug(__filename, req.path, 'Invalid path in URL.');
             res.setHeader('Content-Type', 'text/html');
