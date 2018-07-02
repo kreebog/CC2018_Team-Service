@@ -15,7 +15,7 @@ const DB_NAME = 'cc2018';
 const COL_NAME = 'teams';
 const SVC_PORT = process.env.TEAM_SVC_PORT || 8080;
 const ENV = process.env['NODE_ENV'] || 'PROD';
-const SVC_NAME = 'session-service';
+const SVC_NAME = 'team-service';
 // set the logging level based on current env
 const log = cc2018_ts_lib_1.Logger.getInstance();
 log.setLogLevel(parseInt(process.env['LOG_LEVEL'] || '3')); // defaults to "INFO"
