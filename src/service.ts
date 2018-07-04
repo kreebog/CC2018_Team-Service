@@ -87,22 +87,22 @@ MongoClient.connect(
 
             // insert team into database
             app.get('/get/:teamId', (req, res) => {
-                let teamId = req.params.teamId;
+                let teamId = parseInt(req.params.teamId);
 
                 // search the collection for a maze with the right id
-                col.find({ teamId: teamId }).toArray((err, docs) => {
+                col.find({ id: teamId }).toArray((err, docs) => {
                     if (err) {
-                        log.error(__filename, req.path, JSON.stringify(err));
+                        log.error(__filename, req.path, err.toString());
                         return res
                             .status(500)
-                            .json({ status: format('Error finding %s in %s: %s', teamId, COL_NAME, err.message) });
+                            .json({ status: format('Error finding %s in %s: %s', teamId, COL_NAME, err.toString()) });
                     }
 
                     if (docs.length > 0) {
                         return res.status(200).json(docs[0]);
                     } else {
                         res.status(404).json({
-                            status: format('No teams with id %s found in collectoin %s', teamId, COL_NAME)
+                            status: format('No teams with id %s found in collection %s', teamId, COL_NAME)
                         });
                     }
                 });
