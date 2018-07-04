@@ -10,7 +10,7 @@ const mongodb_1 = require("mongodb");
 const express_1 = __importDefault(require("express"));
 const cc2018_ts_lib_1 = require("cc2018-ts-lib");
 // constant value references
-const DB_URL = 'mongodb+srv://mdbuser:cc2018-mdbpw@cluster0-bxvkt.mongodb.net/';
+const DB_URL = util_1.format('%s://%s:%s@%s/', process.env['DB_PROTOCOL'], process.env['DB_USER'], process.env['DB_USERPW'], process.env['DB_URL']);
 const DB_NAME = 'cc2018';
 const COL_NAME = 'teams';
 const SVC_PORT = process.env.TEAM_SVC_PORT || 8080;
@@ -46,12 +46,14 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
             col.find({}).toArray((err, docs) => {
                 if (err) {
                     log.error(__filename, req.path, JSON.stringify(err));
-                    return res.status(500).json({ 'status': util_1.format('Error finding getting teams from %s: %s', COL_NAME, err.message) });
+                    return res
+                        .status(500)
+                        .json({ status: util_1.format('Error finding getting teams from %s: %s', COL_NAME, err.message) });
                 }
                 // if no match found, generate a new maze from the given values
                 if (docs.length == 0) {
                     log.debug(__filename, req.path, util_1.format('No teams found in collection %s', COL_NAME));
-                    res.status(404).json({ 'status': util_1.format('No teams found in collectoin %s', COL_NAME) });
+                    res.status(404).json({ status: util_1.format('No teams found in collectoin %s', COL_NAME) });
                 }
                 else {
                     // match was found in the database return it as json
@@ -61,20 +63,24 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 }
             });
         });
-        // insert team into database 
+        // insert team into database
         app.get('/get/:teamId', (req, res) => {
-            let teamId = req.params.teamId;
+            let teamId = parseInt(req.params.teamId);
             // search the collection for a maze with the right id
-            col.find({ teamId: teamId }).toArray((err, docs) => {
+            col.find({ id: teamId }).toArray((err, docs) => {
                 if (err) {
-                    log.error(__filename, req.path, JSON.stringify(err));
-                    return res.status(500).json({ 'status': util_1.format('Error finding %s in %s: %s', teamId, COL_NAME, err.message) });
+                    log.error(__filename, req.path, err.toString());
+                    return res
+                        .status(500)
+                        .json({ status: util_1.format('Error finding %s in %s: %s', teamId, COL_NAME, err.toString()) });
                 }
                 if (docs.length > 0) {
                     return res.status(200).json(docs[0]);
                 }
                 else {
-                    res.status(404).json({ 'status': util_1.format('No teams with id %s found in collectoin %s', teamId, COL_NAME) });
+                    res.status(404).json({
+                        status: util_1.format('No teams with id %s found in collection %s', teamId, COL_NAME)
+                    });
                 }
             });
         });
@@ -91,7 +97,7 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 contentType: 'text/html',
                 responseCode: 404,
                 sampleGetAll: util_1.format('http://%s/get', req.headers.host),
-                sampleGet: util_1.format('http://%s/get/1', req.headers.host),
+                sampleGet: util_1.format('http://%s/get/1', req.headers.host)
             });
         }); // route: /
     }); // app.listen...
