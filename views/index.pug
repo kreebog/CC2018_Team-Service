@@ -11,21 +11,20 @@ html(lang="en")
             include js/jquery-3.3.1.min.js
             include js/popper.min.js
             include js/bootstrap.min.js
-
-        div(class='container')
+        div(class='container text-center')
             h1 Team Service - API Documentations
             p Provides API methods to manage Team and Team-Bot data.
             hr
             br
-            table
-                th Link
-                th Method
-                th Action
-                th Type
-                th Arguments
-                th Return
-                th Status
-                th Description
+            table(class='table table-striped table-dark table-hover' style='color:antiquewhite')
+                th(scope='col') Link
+                th(scope='col') Method
+                th(scope='col') Action
+                th(scope='col') Type
+                th(scope='col') Arguments
+                th(scope='col') Return
+                th(scope='col') Status
+                th(scope='col') Description
                 tr
                     td
                         a(href=sampleList) List Teams
