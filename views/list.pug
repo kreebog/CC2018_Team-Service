@@ -1,0 +1,59 @@
+doctype html
+html(lang="en")
+    head
+        style
+            include css\bootstrap.min.css
+            include css\style.css
+        title Team Service - Teams List
+        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes")
+    body
+        script
+            include js\jquery-3.3.1.min.js
+            include js\popper.min.js
+            include js\bootstrap.min.js
+        div(class='container')
+            h1 Team Service - List of Teams
+            hr
+            div(class='accordion' id='accTeams' style='text-align:center')
+                each team in teams
+                    div(class='card')
+                        div(class='card-header' id='heading-' + team.id)
+                            h5(class='mb-0')
+                                button(class='btn btn-link collapsed' type='button' data-toggle='collapse' data-target='#collapse-' + team.id, aria-expanded='false', aria-controls='collpase-' + team.id style='font-size:xx-large;')
+                                    =team.name
+                                br 
+                                small(class='text-muted') #{team.id}
+                                        
+                        div(id='collapse-' + team.id class='collapse' aria-labelledby='heading-' + team.id data-parent='#accTeams')
+                            div(class='card-body')
+                                a(href='/get/' + team.id) Get JSON
+                                |&nbsp;|&nbsp;
+                                a(href='/delete/' + team.id) Delete Team
+                                |&nbsp;|&nbsp;
+                                a(href='/add/' + team.id + "?name=" + team.name) Add Team
+                                |&nbsp;|&nbsp;
+                                a(href='/update/' + team.id + '?name=' + team.name) Update Team
+                                
+                            div(class='card-body')
+                                table(style='text-align:center')
+                                    th Bot Name
+                                    th Coder Name
+                                    th Bot Weight
+                                        each bot in team.bots
+                                            tr
+                                                td #{bot.name}
+                                                td #{bot.coder}
+                                                td #{bot.weight}
+
+
+
+//-
+                    div(class='card-body')
+                        h5(class='card-title')
+                            =team.name
+                        h6(class='card-subtitle mb-2 text-muted')
+                            ="(" + team.id + ")"
+                        each bot in team.bots
+                            p(class='card-text')
+                                =bot.name + " (" + bot.id + ")"
+//
