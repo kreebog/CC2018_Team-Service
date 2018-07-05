@@ -26,53 +26,63 @@ html(lang="en")
                 th Status
                 th Description
                 tr
-                    td(class='td-left')
+                    td
                         a(href=sampleList) List Teams
                     td Get
                     td Render List
                     td HTML
-                    td(class='td-left') N/A
-                    td(class='td-left') Teams
+                    td N/A
+                    td Teams
                     td Current
-                    td(class='td-left') Renders a list of all available teams with some sample links.
+                    td Renders a list of all available teams with some sample links.
                 tr
-                    td(class='td-left')
+                    td
                         a(href=sampleGetAll) Get All
                     td Get
                     td Get All
                     td JSON 
-                    td(class='td-left') N/A
-                    td(class='td-left') Team
+                    td N/A
+                    td Team
                     td Current
-                    td(class='td-left') Returns all available teams.
+                    td Returns all available teams.
                 tr
-                    td(class='td-left')
+                    td
                         a(href=sampleGet) Get One
                     td Get
                     td Get
                     td JSON 
-                    td(class='td-left') TeamID - number 
-                    td(class='td-left') Team
+                    td TeamId
+                    td Team
                     td Current
-                    td(class='td-left') Returns the team with the matching TeamID
+                    td Returns the team with the matching TeamID
                 tr
-                    td(class='td-left')
-                        a(href=sampleGet) Add
+                    td
+                        a(href=sampleAdd) Add
                     td Get
                     td Insert
                     td JSON 
-                    td(class='td-left') Team Data / Query
-                    td(class='td-left') Result
+                    td Query String: ?name&bot[1-5]-name&bot[1-5]-coder&bot[1-5]-weight
+                    td Result
                     td Current
-                    td(class='td-left') Inserts new Ream record and returns result
+                    td Inserts new Team record and returns result
                 tr
-                    td(class='td-left')
-                        a(href=sampleGet) Update
+                    td
+                        a(href=sampleUpdate) Update
                     td Get
                     td Update
                     td JSON 
-                    td(class='td-left') TeamId?name | bot[1-5]
-                    td(class='td-left') Result
+                    td Query String: /teamId?name&bot[1-5]-name&bot[1-5]-coder&bot[1-5]-weight
+                    td Result
                     td Current
-                    td(class='td-left') Updates the given Team's information and returns result
+                    td Updates the given Team's information and returns result
+                tr
+                    td
+                        a(href=sampleDelete) Delete
+                    td Get
+                    td Delete
+                    td JSON 
+                    td TeamId
+                    td Result
+                    td Current
+                    td Updates the given Team's information and returns result
 

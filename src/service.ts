@@ -287,8 +287,6 @@ MongoClient.connect(
                 });
             });
 
-            // "5b391dd3bacadd397474eaf1","id":2,"name":"Team Two","members":[{"id":1,"name":"Bot-1"},{"id":2,"name":"Bot-2"},{"id":3,"name":"Bot-3"},{"id":4,"name":"Bot-4"},{"id":5,"name":"Bot-5"}]}
-
             // Handle favicon requests - using the BCBST favicon.ico
             app.get('/favicon.ico', (req, res) => {
                 res.setHeader('Content-Type', 'image/x-icon');
@@ -309,7 +307,16 @@ MongoClient.connect(
                     responseCode: 404,
                     sampleList: format('http://%s/list', req.headers.host),
                     sampleGetAll: format('http://%s/get', req.headers.host),
-                    sampleGet: format('http://%s/get/1', req.headers.host)
+                    sampleGet: format('http://%s/get/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
+                    sampleDelete: format('http://%s/delete/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
+                    sampleAdd: format(
+                        'http://%s/add?name=Sample%20Team&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20',
+                        req.headers.host
+                    ),
+                    sampleUpdate: format(
+                        'http://%s/update/6e15a6c0-cee8-422e-ba33-df00aa5ddd45?name=Sample%20Team&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20',
+                        req.headers.host
+                    )
                 });
             }); // route: /
         }); // app.listen...
