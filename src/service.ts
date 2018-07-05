@@ -300,7 +300,7 @@ MongoClient.connect(
 
             // now handle all remaining routes with express
             app.get('/*', (req, res) => {
-                log.debug(__filename, req.path, 'Invalid path in URL.');
+                log.debug(__filename, req.path, 'Unhandled route - redirecting to index page.');
                 res.setHeader('Content-Type', 'text/html');
                 res.render('index', {
                     contentType: 'text/html',
