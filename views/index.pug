@@ -1,40 +1,88 @@
 doctype html
-html
+html(lang="en")
     head
         style
-            include style.css
+            include css\bootstrap.min.css
+            include css\style.css
         title Team Service - API Documentation
+        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes")
     body
-        h1 Team Service - API Documentations
-        p The team service is very limited - only supports /get and /get/:teamId.  Team data should be very static, and will be managed manually in the database.
-        hr
-        br
-        table
-            th Method
-            th Action
-            th Type
-            th Arguments
-            th Return
-            th Sample
-            th Status
-            th Description
-            tr
-                td Get
-                td Get All
-                td JSON 
-                td(class='td-left') N/A
-                td(class='td-left') Team
-                td(class='td-left')
-                    a(href=sampleGetAll) #{sampleGetAll}
-                td Current
-                td(class='td-left') Returns all available teams.
-            tr
-                td Get
-                td Get
-                td JSON 
-                td(class='td-left') TeamID - number 
-                td(class='td-left') Team
-                td(class='td-left')
-                    a(href=sampleGet) #{sampleGet}
-                td Current
-                td(class='td-left') Returns the team with the matching TeamID
+        script:src(js\jquery-3.3.1.min.js)
+        script:src(js\popper.min.js)
+        script:src(js\bootstrap.min.js)
+
+        div(class='container')
+            h1 Team Service - API Documentations
+            p Provides API methods to manage Team and Team-Bot data.
+            hr
+            br
+            table
+                th Link
+                th Method
+                th Action
+                th Type
+                th Arguments
+                th Return
+                th Status
+                th Description
+                tr
+                    td
+                        a(href=sampleList) List Teams
+                    td Get
+                    td Render List
+                    td HTML
+                    td N/A
+                    td Teams
+                    td Current
+                    td Renders a list of all available teams with some sample links.
+                tr
+                    td
+                        a(href=sampleGetAll) Get All
+                    td Get
+                    td Get All
+                    td JSON 
+                    td N/A
+                    td Team
+                    td Current
+                    td Returns all available teams.
+                tr
+                    td
+                        a(href=sampleGet) Get One
+                    td Get
+                    td Get
+                    td JSON 
+                    td TeamId
+                    td Team
+                    td Current
+                    td Returns the team with the matching TeamID
+                tr
+                    td
+                        a(href=sampleAdd) Add
+                    td Get
+                    td Insert
+                    td JSON 
+                    td Query String: ?name&bot[1-5]-name&bot[1-5]-coder&bot[1-5]-weight
+                    td Result
+                    td Current
+                    td Inserts new Team record and returns result
+                tr
+                    td
+                        a(href=sampleUpdate) Update
+                    td Get
+                    td Update
+                    td JSON 
+                    td Query String: /teamId?name&bot[1-5]-name&bot[1-5]-coder&bot[1-5]-weight
+                    td Result
+                    td Current
+                    td Updates the given Team's information and returns result
+                tr
+                    td
+                        a(href=sampleDelete) Delete
+                    td Get
+                    td Delete
+                    td JSON 
+                    td TeamId
+                    td Result
+                    td Current
+                    td Updates the given Team's information and returns result
+
