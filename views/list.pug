@@ -4,7 +4,7 @@ html(lang="en")
         style
             include css/bootstrap.min.css
             include css/style.css
-        title Team Service - Teams List
+        title Teams List
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes")
     body
         script
@@ -12,26 +12,24 @@ html(lang="en")
             include js/popper.min.js
             include js/bootstrap.min.js
         div(class='container')
-            h1 Team Service - List of Teams
+            h1 Team Service - Teams List
             hr
-            div(class='accordion text-center bg-dark' id='accTeams')
+            div.accordion.bg-dark(id='accTeams')
                 each team in teams
-                    div(class='card' style='border-color:#000')
-                        div(class='card-header bg-dark' id='heading-' + team.id)
+                    div.card.bg-dark(style='border: solid 2px black')
+                        div.card-header.bg-dark.text-center(id='heading-' + team.id style='max-width:400px;margin-left:auto;margin-right:auto;margin-top:2px;margin-bottom:2px')
+                            img(src='/views/images/' + team.logo style='height:85px;width:85px')
                             h5(class='mb-0 bg-dark')
                                 button(class='btn btn-link collapsed' type='button' data-toggle='collapse' data-target='#collapse-' + team.id, aria-expanded='false', aria-controls='collpase-' + team.id style='font-size:xx-large;')
                                     =team.name
-                                br 
-                                small(class='text-muted') #{team.id}
-                                        
-                        div(id='collapse-' + team.id class='collapse' aria-labelledby='heading-' + team.id data-parent='#accTeams')
+                            small(class='text-muted') #{team.id}
+                        div.collapse.text-center(id='collapse-' + team.id aria-labelledby='heading-' + team.id data-parent='#accTeams')
                             div(class='card-body' style='background-color:#222222')
                                 a(href='/get/' + team.id) Get JSON
                                 |&nbsp;|&nbsp;
-                                a(href='/delete/' + team.id) Delete Team
-                                |&nbsp;|&nbsp;
                                 a(href='/update/' + team.id + '?name=' + team.name) Update Team
-                                
+                                |&nbsp;|&nbsp;
+                                a(href='/delete/' + team.id) Delete Team
                             div(class='card-body' style='background-color:#555555')
                                 table(class='table table-striped table-dark table-hover' style='color:antiquewhite')
                                     th(scope='col') Bot Name
@@ -42,16 +40,3 @@ html(lang="en")
                                                 td #{bot.name}
                                                 td #{bot.coder}
                                                 td #{bot.weight}
-
-
-
-//-
-                    div(class='card-body')
-                        h5(class='card-title')
-                            =team.name
-                        h6(class='card-subtitle mb-2 text-muted')
-                            ="(" + team.id + ")"
-                        each bot in team.bots
-                            p(class='card-text')
-                                =bot.name + " (" + bot.id + ")"
-//

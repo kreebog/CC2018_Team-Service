@@ -1,4 +1,5 @@
 require('dotenv').config();
+import fs from 'fs';
 import uuid from 'uuid/v4';
 import url from 'url';
 import path from 'path';
@@ -9,13 +10,7 @@ import { Server } from 'http';
 import { Logger, IBot, ITeam, Team, Bot } from 'cc2018-ts-lib';
 
 // constant value references
-const DB_URL = format(
-    '%s://%s:%s@%s/',
-    process.env['DB_PROTOCOL'],
-    process.env['DB_USER'],
-    process.env['DB_USERPW'],
-    process.env['DB_URL']
-);
+const DB_URL = format('%s://%s:%s@%s/', process.env['DB_PROTOCOL'], process.env['DB_USER'], process.env['DB_USERPW'], process.env['DB_URL']);
 const DB_NAME = 'cc2018';
 const COL_NAME = 'teams';
 const SVC_PORT = process.env.TEAM_SVC_PORT || 8080;
@@ -42,11 +37,7 @@ MongoClient.connect(
     DB_URL,
     (err, client) => {
         if (err) {
-            log.error(
-                __filename,
-                format('MongoClient.connect(%s)', DB_URL),
-                'Error connecting to MongoDB: ' + err.message
-            );
+            log.error(__filename, format('MongoClient.connect(%s)', DB_URL), 'Error connecting to MongoDB: ' + err.message);
             return err;
         }
 
@@ -74,12 +65,7 @@ MongoClient.connect(
                             status: format('Error getting Teams from %s.%s: %s', DB_NAME, COL_NAME, err.toString())
                         });
                     } else {
-                        res.setHeader('Content-Type', 'text/html');
-                        res.render('list', {
-                            contentType: 'text/html',
-                            responseCode: 200,
-                            teams: docs
-                        });
+                        res.render('list', { teams: docs });
                     }
                 });
             });
@@ -90,9 +76,7 @@ MongoClient.connect(
                 col.find({}).toArray((err, docs) => {
                     if (err) {
                         log.error(__filename, req.path, JSON.stringify(err));
-                        return res
-                            .status(500)
-                            .json({ status: format('Error finding getting teams from %s: %s', COL_NAME, err.message) });
+                        return res.status(500).json({ status: format('Error finding getting teams from %s: %s', COL_NAME, err.message) });
                     }
 
                     // if no match found, generate a new maze from the given values
@@ -101,14 +85,10 @@ MongoClient.connect(
                         res.status(404).json({ status: format('No teams found in collectoin %s', COL_NAME) });
                     } else {
                         // match was found in the database return it as json
-                        log.debug(
-                            __filename,
-                            req.path,
-                            format('%d teams found in %s, returning JSON ...', docs.length, COL_NAME)
-                        );
+                        log.debug(__filename, req.path, format('%d teams found in %s, returning JSON ...', docs.length, COL_NAME));
 
                         // send the json data
-                        res.status(200).json(docs);
+                        res.json(docs);
                     }
                 });
             });
@@ -121,13 +101,11 @@ MongoClient.connect(
                 col.deleteOne({ id: teamId }, (err, results) => {
                     if (err) {
                         log.error(__filename, req.path, JSON.stringify(err));
-                        return res
-                            .status(500)
-                            .json({ status: format('Error deleting %s from %s: %s', teamId, COL_NAME, err.message) });
+                        return res.status(500).json({ status: format('Error deleting %s from %s: %s', teamId, COL_NAME, err.message) });
                     }
 
                     // send the result code with deleted doc count
-                    res.status(200).json({ status: 'ok', count: results.deletedCount });
+                    res.json({ status: 'ok', count: results.deletedCount });
                     log.info(__filename, req.path, format('%d document(s) deleted', results.deletedCount));
                 });
             });
@@ -140,13 +118,11 @@ MongoClient.connect(
                 col.find({ id: teamId }).toArray((err, docs) => {
                     if (err) {
                         log.error(__filename, req.path, err.toString());
-                        return res
-                            .status(500)
-                            .json({ status: format('Error finding %s in %s: %s', teamId, COL_NAME, err.toString()) });
+                        return res.status(500).json({ status: format('Error finding %s in %s: %s', teamId, COL_NAME, err.toString()) });
                     }
 
                     if (docs.length > 0) {
-                        return res.status(200).json(docs[0]);
+                        return res.json(docs[0]);
                     } else {
                         res.status(404).json({
                             status: format('No teams with id %s found in collection %s', teamId, COL_NAME)
@@ -155,9 +131,9 @@ MongoClient.connect(
                 });
             });
 
-            // can really change are the names and bot weights
+            // add a new team to the database
             app.get('/add', (req, res) => {
-                let team: ITeam = { id: uuid(), name: '', bots: new Array<IBot>() };
+                let team: ITeam = { id: uuid(), name: '', logo: 'unknown_logo_150.png', bots: new Array<IBot>() };
                 let urlParts = url.parse(req.url, true);
                 let query = urlParts.query;
 
@@ -173,16 +149,23 @@ MongoClient.connect(
                     return res.status(400).json({ status: msg });
                 }
 
+                if (urlParts.query['logo'] === undefined) {
+                    let msg = 'Invalid request - Logo is required: /add?logo=FileName.  Available logos: [fire|skull|sun|tree|water|unknown]_logo_150.png';
+                    log.debug(__filename, req.path, msg);
+                    return res.status(400).json({ status: msg });
+                }
+
                 if (!req.url.match(/bot[0-9]-name/g)) {
                     let msg = 'Invalid request - At least one bot is required: /add?team=TeamName&bot1-name=BotName';
                     log.debug(__filename, req.path, msg);
                     return res.status(400).json({ status: msg });
                 }
 
-                // team name change?
+                // set team name and logo
                 team.name = query['name'] + '';
+                team.logo = query['logo'] + '';
 
-                // team bot name or weight changes?
+                // add the bots
                 for (let x = 0; x < 5; x++) {
                     let nameKey: string = format('bot%d-name', x + 1);
                     let coderKey: string = format('bot%d-coder', x + 1);
@@ -203,11 +186,11 @@ MongoClient.connect(
                     team.bots.push(bot);
                 }
 
-                // don't update the database if there aren't any changes
+                // insert the record into the database
                 col.insert(team);
 
                 // return success
-                res.status(200).json({ status: format('Team [%s] (%s) added.', team.name, team.id) });
+                res.json({ status: format('Team [%s] (%s) added.', team.name, team.id) });
             });
 
             /**
@@ -222,9 +205,7 @@ MongoClient.connect(
                 col.find({ id: teamId }).toArray((err, docs) => {
                     if (err) {
                         log.error(__filename, req.path, err.toString());
-                        return res
-                            .status(500)
-                            .json({ status: format('Error finding %s in %s: %s', teamId, COL_NAME, err.toString()) });
+                        return res.status(500).json({ status: format('Error finding %s in %s: %s', teamId, COL_NAME, err.toString()) });
                     }
 
                     // make sure there's some work to be done...
@@ -243,6 +224,9 @@ MongoClient.connect(
 
                         // team name change?
                         if (query['name'] !== undefined) team.name = query['name'] + '';
+
+                        // team logo change?
+                        if (query['logo'] !== undefined) team.logo = query['logo'] + '';
 
                         // team bot name or weight changes?
                         for (let x = 0; x < 5; x++) {
@@ -278,7 +262,7 @@ MongoClient.connect(
                         }
 
                         // return success
-                        res.status(200).json({ status: format('%s %s', statusMsg, team.id) });
+                        res.json({ status: format('%s %s', statusMsg, team.id) });
                     } else {
                         res.status(404).json({
                             status: format('No teams with id %s found in collection %s', teamId, COL_NAME)
@@ -287,24 +271,25 @@ MongoClient.connect(
                 });
             });
 
-            // Handle favicon requests - using the BCBST favicon.ico
-            app.get('/favicon.ico', (req, res) => {
-                res.setHeader('Content-Type', 'image/x-icon');
-                res.status(200).sendFile(path.resolve('views/favicon.ico'));
-            }); // route: /favicon.ico
+            // handle images, css, and js file requests
+            app.get(['/favicon.ico', '/views/images/:file', '/views/css/:file', '/views/js/:file'], function(req, res) {
+                // make sure file exits before sending
+                if (fs.existsSync(path.resolve('.' + req.path).toString())) {
+                    res.sendFile(path.resolve('.' + req.path));
+                } else {
+                    res.status(404).send();
+                }
+            });
 
             // handle bootstrap css map request
             app.get('/bootstrap.min.css.map', (req, res) => {
-                res.status(200).sendFile(path.resolve('views/css/bootstrap.min.css.map'));
+                res.sendFile(path.resolve('views/css/bootstrap.min.css.map'));
             });
 
             // now handle all remaining routes with express
             app.get('/*', (req, res) => {
                 log.debug(__filename, req.path, 'Unhandled route - redirecting to index page.');
-                res.setHeader('Content-Type', 'text/html');
                 res.render('index', {
-                    contentType: 'text/html',
-                    responseCode: 404,
                     sampleList: format('http://%s/list', req.headers.host),
                     sampleGetAll: format('http://%s/get', req.headers.host),
                     sampleGet: format('http://%s/get/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),

@@ -18,7 +18,7 @@
     },
     "homepage": "https://github.com/kreebog/CC2018-Session-Service#readme",
     "dependencies": {
-        "cc2018-ts-lib": "^1.4.1",
+        "cc2018-ts-lib": "^1.4.21",
         "dotenv": "^6.0.0",
         "express": "^4.16.3",
         "mongodb": "3.0.10",
