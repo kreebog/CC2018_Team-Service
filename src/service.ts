@@ -295,7 +295,7 @@ MongoClient.connect(
                     sampleGet: format('http://%s/get/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
                     sampleDelete: format('http://%s/delete/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
                     sampleAdd: format(
-                        'http://%s/add?name=Sample%20Team&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20',
+                        'http://%s/add?name=Sample%20Team&logo=unknown_logo_150.png&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20',
                         req.headers.host
                     ),
                     sampleUpdate: format(

@@ -1,5 +1,5 @@
 {
-    "name": "cc2018-session-service",
+    "name": "cc2018-team-service",
     "version": "1.0.0",
     "description": "Session Service for Code Camp 2018",
     "main": "service.js",
@@ -18,7 +18,7 @@
     },
     "homepage": "https://github.com/kreebog/CC2018-Session-Service#readme",
     "dependencies": {
-        "cc2018-ts-lib": "^1.4.21",
+        "cc2018-ts-lib": "^1.4.24",
         "dotenv": "^6.0.0",
         "express": "^4.16.3",
         "mongodb": "3.0.10",
@@ -30,7 +30,7 @@
         "@types/mongodb": "^3.1.1",
         "@types/node": "^10.5.2",
         "@types/pug": "^2.0.4",
-        "eslint": "^5.0.1",
+        "eslint": "^5.1.0",
         "eslint-config-google": "^0.9.1"
     }
 }

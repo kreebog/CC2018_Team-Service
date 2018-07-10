@@ -262,7 +262,7 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 sampleGetAll: util_1.format('http://%s/get', req.headers.host),
                 sampleGet: util_1.format('http://%s/get/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
                 sampleDelete: util_1.format('http://%s/delete/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
-                sampleAdd: util_1.format('http://%s/add?name=Sample%20Team&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20', req.headers.host),
+                sampleAdd: util_1.format('http://%s/add?name=Sample%20Team&logo=unknown_logo_150.png&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20', req.headers.host),
                 sampleUpdate: util_1.format('http://%s/update/6e15a6c0-cee8-422e-ba33-df00aa5ddd45?name=Sample%20Team&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20', req.headers.host)
             });
         }); // route: /
