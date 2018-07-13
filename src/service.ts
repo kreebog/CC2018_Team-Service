@@ -7,7 +7,7 @@ import { format } from 'util';
 import { MongoClient } from 'mongodb';
 import express from 'express';
 import { Server } from 'http';
-import { Logger, IBot, ITeam, Team, Bot } from 'cc2018-ts-lib';
+import { Logger, IBot, ITeam, Team, Bot, ITrophy } from 'cc2018-ts-lib';
 
 // constant value references
 const DB_URL = format('%s://%s:%s@%s/', process.env['DB_PROTOCOL'], process.env['DB_USER'], process.env['DB_USERPW'], process.env['DB_URL']);
@@ -16,6 +16,7 @@ const COL_NAME = 'teams';
 const SVC_PORT = process.env.TEAM_SVC_PORT || 8080;
 const ENV = process.env['NODE_ENV'] || 'PROD';
 const SVC_NAME = 'team-service';
+const DELETE_PASSWORD = process.env.DELETE_PASSWORD;
 
 // set the logging level based on current env
 const log = Logger.getInstance();
@@ -93,9 +94,12 @@ MongoClient.connect(
                 });
             });
 
-            // insert team into database
-            app.get('/delete/:teamId', (req, res) => {
+            // delete a team from database
+            app.get('/delete/:teamId/:password', (req, res) => {
                 let teamId: string = req.params.teamId + '';
+
+                // PASSWORD FOR DELETES FOUND IN ENVIRONMENT VARIABLES
+                if (DELETE_PASSWORD != req.params.password) return res.status(401).json({ status: 'Missing or incorrect password.' });
 
                 // search the collection for a maze with the right id
                 col.deleteOne({ id: teamId }, (err, results) => {
@@ -133,7 +137,7 @@ MongoClient.connect(
 
             // add a new team to the database
             app.get('/add', (req, res) => {
-                let team: ITeam = { id: uuid(), name: '', logo: 'unknown_logo_150.png', bots: new Array<IBot>() };
+                let team: ITeam = { id: uuid(), name: '', logo: 'unknown_logo_150.png', bots: new Array<IBot>(), trophies: new Array<ITrophy>() };
                 let urlParts = url.parse(req.url, true);
                 let query = urlParts.query;
 
@@ -293,7 +297,7 @@ MongoClient.connect(
                     sampleList: format('http://%s/list', req.headers.host),
                     sampleGetAll: format('http://%s/get', req.headers.host),
                     sampleGet: format('http://%s/get/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
-                    sampleDelete: format('http://%s/delete/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
+                    sampleDelete: format('http://%s/delete/6e15a6c0-cee8-422e-ba33-df00aa5ddd45/pw', req.headers.host),
                     sampleAdd: format(
                         'http://%s/add?name=Sample%20Team&logo=unknown_logo_150.png&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20',
                         req.headers.host

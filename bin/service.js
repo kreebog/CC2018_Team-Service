@@ -19,6 +19,7 @@ const COL_NAME = 'teams';
 const SVC_PORT = process.env.TEAM_SVC_PORT || 8080;
 const ENV = process.env['NODE_ENV'] || 'PROD';
 const SVC_NAME = 'team-service';
+const DELETE_PASSWORD = process.env.DELETE_PASSWORD;
 // set the logging level based on current env
 const log = cc2018_ts_lib_1.Logger.getInstance();
 log.setLogLevel(parseInt(process.env['LOG_LEVEL'] || '3')); // defaults to "INFO"
@@ -84,9 +85,12 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 }
             });
         });
-        // insert team into database
-        app.get('/delete/:teamId', (req, res) => {
+        // delete a team from database
+        app.get('/delete/:teamId/:password', (req, res) => {
             let teamId = req.params.teamId + '';
+            // PASSWORD FOR DELETES FOUND IN ENVIRONMENT VARIABLES
+            if (DELETE_PASSWORD != req.params.password)
+                return res.status(401).json({ status: 'Missing or incorrect password.' });
             // search the collection for a maze with the right id
             col.deleteOne({ id: teamId }, (err, results) => {
                 if (err) {
@@ -119,7 +123,7 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
         });
         // add a new team to the database
         app.get('/add', (req, res) => {
-            let team = { id: v4_1.default(), name: '', logo: 'unknown_logo_150.png', bots: new Array() };
+            let team = { id: v4_1.default(), name: '', logo: 'unknown_logo_150.png', bots: new Array(), trophies: new Array() };
             let urlParts = url_1.default.parse(req.url, true);
             let query = urlParts.query;
             // make sure there's some work to be done...
@@ -261,7 +265,7 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 sampleList: util_1.format('http://%s/list', req.headers.host),
                 sampleGetAll: util_1.format('http://%s/get', req.headers.host),
                 sampleGet: util_1.format('http://%s/get/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
-                sampleDelete: util_1.format('http://%s/delete/6e15a6c0-cee8-422e-ba33-df00aa5ddd45', req.headers.host),
+                sampleDelete: util_1.format('http://%s/delete/6e15a6c0-cee8-422e-ba33-df00aa5ddd45/pw', req.headers.host),
                 sampleAdd: util_1.format('http://%s/add?name=Sample%20Team&logo=unknown_logo_150.png&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20', req.headers.host),
                 sampleUpdate: util_1.format('http://%s/update/6e15a6c0-cee8-422e-ba33-df00aa5ddd45?name=Sample%20Team&bot1-name=Bot One&bot1-coder=Mister-E&bot1-weight=20&bot2-name=Bot Two&bot2-coder=Mister-E&bot2-weight=20&bot3-name=Bot Three&bot3-coder=Mister-E&bot3-weight=20&bot4-name=Bot Four&bot4-coder=Mister-E&bot4-weight=20&bot5-name=Bot Five&bot5-coder=Mister-E&bot5-weight=20', req.headers.host)
             });
