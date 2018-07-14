@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
+let bodyParser = require('body-parser');
 const fs_1 = __importDefault(require("fs"));
 const v4_1 = __importDefault(require("uuid/v4"));
 const url_1 = __importDefault(require("url"));
@@ -50,6 +51,8 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
+        // parse incoming request bodies as JSON
+        app.use(bodyParser.json());
         // Renders functional list of team data
         app.get('/list', (req, res) => {
             col.find({}).toArray((err, docs) => {
@@ -172,6 +175,12 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
             col.insert(team);
             // return success
             res.json({ status: util_1.format('Team [%s] (%s) added.', team.name, team.id) });
+        });
+        // just shove a whole score from request body into the database all at once
+        app.put('/team', (req, res) => {
+            let team = req.body;
+            col.update({ id: team.id }, team);
+            log.debug(__filename, req.url, util_1.format('Team updated: ', req.body));
         });
         /**
          * Update an existing team in the database.

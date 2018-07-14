@@ -1,4 +1,5 @@
 require('dotenv').config();
+let bodyParser = require('body-parser');
 import fs from 'fs';
 import uuid from 'uuid/v4';
 import url from 'url';
@@ -56,6 +57,9 @@ MongoClient.connect(
                 res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
                 next();
             });
+
+            // parse incoming request bodies as JSON
+            app.use(bodyParser.json());
 
             // Renders functional list of team data
             app.get('/list', (req, res) => {
@@ -195,6 +199,13 @@ MongoClient.connect(
 
                 // return success
                 res.json({ status: format('Team [%s] (%s) added.', team.name, team.id) });
+            });
+
+            // just shove a whole score from request body into the database all at once
+            app.put('/team', (req, res) => {
+                let team: ITeam = req.body;
+                col.update({ id: team.id }, team);
+                log.debug(__filename, req.url, format('Team updated: ', req.body));
             });
 
             /**
