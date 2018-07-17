@@ -87,7 +87,7 @@ MongoClient.connect(
                     // if no match found, generate a new maze from the given values
                     if (docs.length == 0) {
                         log.debug(__filename, req.path, format('No teams found in collection %s', COL_NAME));
-                        res.status(404).json({ status: format('No teams found in collectoin %s', COL_NAME) });
+                        res.status(404).json({ status: format('No teams found in collection %s', COL_NAME) });
                     } else {
                         // match was found in the database return it as json
                         log.debug(__filename, req.path, format('%d teams found in %s, returning JSON ...', docs.length, COL_NAME));
@@ -148,7 +148,7 @@ MongoClient.connect(
                 // make sure there's some work to be done...
                 if (Object.keys(urlParts.query).length == 0) {
                     log.debug(__filename, req.path, 'No arguments in query string, aborting update.');
-                    return res.status(400).json({ status: 'Invalid request: No aruments in query string.' });
+                    return res.status(400).json({ status: 'Invalid request: No arguments in query string.' });
                 }
 
                 if (urlParts.query['name'] === undefined) {
@@ -226,7 +226,7 @@ MongoClient.connect(
                     // make sure there's some work to be done...
                     if (Object.keys(urlParts.query).length == 0) {
                         log.debug(__filename, req.path, 'No arguments in query string, aborting update.');
-                        return res.status(400).json({ status: 'Invalid request: No aruments in query string.' });
+                        return res.status(400).json({ status: 'Invalid request: No arguments in query string.' });
                     }
 
                     // make sure we have a team with this ID before updating it
@@ -321,14 +321,14 @@ MongoClient.connect(
             }); // route: /
         }); // app.listen...
     }
-); // MongoClient.conect...
+); // MongoClient.connect...
 
 /**
  * Watch for SIGINT (process interrupt signal) and trigger shutdown
  */
 process.on('SIGINT', function onSigInt() {
     // all done, close the db connection
-    log.info(__filename, 'onSigInt()', 'Got SIGINT - Exiting applicaton...');
+    log.info(__filename, 'onSigInt()', 'Got SIGINT - Exiting application...');
     doShutdown();
 });
 
@@ -337,7 +337,7 @@ process.on('SIGINT', function onSigInt() {
  */
 process.on('SIGTERM', function onSigTerm() {
     // all done, close the db connection
-    log.info(__filename, 'onSigTerm()', 'Got SIGTERM - Exiting applicaton...');
+    log.info(__filename, 'onSigTerm()', 'Got SIGTERM - Exiting application...');
     doShutdown();
 });
 
