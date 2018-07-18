@@ -20,16 +20,16 @@ html(lang="en")
                         div.card-header.bg-dark.text-center(id='heading-' + team.id style='max-width:400px;margin-left:auto;margin-right:auto;margin-top:2px;margin-bottom:2px')
                             img(src='/views/images/' + team.logo style='height:85px;width:85px')
                             h5(class='mb-0 bg-dark')
-                                button(class='btn btn-link collapsed' type='button' data-toggle='collapse' data-target='#collapse-' + team.id, aria-expanded='false', aria-controls='collpase-' + team.id style='font-size:xx-large;')
+                                button(class='btn btn-link collapsed' type='button' data-toggle='collapse' data-target='#collapse-' + team.id, aria-expanded='false', aria-controls='collapse-' + team.id style='font-size:xx-large;')
                                     =team.name
                             small(class='text-muted') #{team.id}
                         div.collapse.text-center(id='collapse-' + team.id aria-labelledby='heading-' + team.id data-parent='#accTeams')
                             div(class='card-body' style='background-color:#222222')
-                                a(href='/get/' + team.id) Get JSON
+                                a(href='/get/' + team.id) Get Team Data
                                 |&nbsp;|&nbsp;
-                                a(href='/update/' + team.id + '?name=' + team.name) Update Team
+                                a(href='http://score.code-camp-2018.com/list?teamId=' + team.id) View Scores
                                 |&nbsp;|&nbsp;
-                                a(href='/delete/pw' + team.id) Delete Team
+                                a(href='http://score.code-camp-2018.com/get?teamId=' + team.id) Get Score Data
                             div(class='card-body' style='background-color:#555555')
                                 table(class='table table-striped table-dark table-hover' style='color:antiquewhite')
                                     th(scope='col') Bot Name
