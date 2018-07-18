@@ -286,8 +286,14 @@ MongoClient.connect(
                 });
             });
 
+            // Handle favicon requests - using the BCBST favicon.ico
+            app.get('/favicon.ico', (req, res) => {
+                res.setHeader('Content-Type', 'image/x-icon');
+                res.status(200).sendFile(path.resolve('views/favicon.ico'));
+            }); // route: /favicon.ico
+            
             // handle images, css, and js file requests
-            app.get(['/favicon.ico', '/views/images/:file', '/views/css/:file', '/views/js/:file'], function(req, res) {
+            app.get(['/views/images/:file', '/views/css/:file', '/views/js/:file'], function(req, res) {
                 // make sure file exits before sending
                 if (fs.existsSync(path.resolve('.' + req.path).toString())) {
                     res.sendFile(path.resolve('.' + req.path));
