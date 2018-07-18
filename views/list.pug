@@ -34,9 +34,7 @@ html(lang="en")
                                 table(class='table table-striped table-dark table-hover' style='color:antiquewhite')
                                     th(scope='col') Bot Name
                                     th(scope='col') Coder Name
-                                    th(scope='col') Bot Weight
                                         each bot in team.bots
                                             tr
                                                 td #{bot.name}
                                                 td #{bot.coder}
-                                                td #{bot.weight}

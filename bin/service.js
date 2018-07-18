@@ -78,7 +78,7 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 // if no match found, generate a new maze from the given values
                 if (docs.length == 0) {
                     log.debug(__filename, req.path, util_1.format('No teams found in collection %s', COL_NAME));
-                    res.status(404).json({ status: util_1.format('No teams found in collectoin %s', COL_NAME) });
+                    res.status(404).json({ status: util_1.format('No teams found in collection %s', COL_NAME) });
                 }
                 else {
                     // match was found in the database return it as json
@@ -132,7 +132,7 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
             // make sure there's some work to be done...
             if (Object.keys(urlParts.query).length == 0) {
                 log.debug(__filename, req.path, 'No arguments in query string, aborting update.');
-                return res.status(400).json({ status: 'Invalid request: No aruments in query string.' });
+                return res.status(400).json({ status: 'Invalid request: No arguments in query string.' });
             }
             if (urlParts.query['name'] === undefined) {
                 let msg = 'Invalid request - Name is required: /add?name=TeamName';
@@ -198,7 +198,7 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 // make sure there's some work to be done...
                 if (Object.keys(urlParts.query).length == 0) {
                     log.debug(__filename, req.path, 'No arguments in query string, aborting update.');
-                    return res.status(400).json({ status: 'Invalid request: No aruments in query string.' });
+                    return res.status(400).json({ status: 'Invalid request: No arguments in query string.' });
                 }
                 // make sure we have a team with this ID before updating it
                 if (docs.length > 0) {
@@ -253,8 +253,13 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
                 }
             });
         });
+        // Handle favicon requests - using the BCBST favicon.ico
+        app.get('/favicon.ico', (req, res) => {
+            res.setHeader('Content-Type', 'image/x-icon');
+            res.status(200).sendFile(path_1.default.resolve('views/favicon.ico'));
+        }); // route: /favicon.ico
         // handle images, css, and js file requests
-        app.get(['/favicon.ico', '/views/images/:file', '/views/css/:file', '/views/js/:file'], function (req, res) {
+        app.get(['/views/images/:file', '/views/css/:file', '/views/js/:file'], function (req, res) {
             // make sure file exits before sending
             if (fs_1.default.existsSync(path_1.default.resolve('.' + req.path).toString())) {
                 res.sendFile(path_1.default.resolve('.' + req.path));
@@ -280,13 +285,13 @@ mongodb_1.MongoClient.connect(DB_URL, (err, client) => {
             });
         }); // route: /
     }); // app.listen...
-}); // MongoClient.conect...
+}); // MongoClient.connect...
 /**
  * Watch for SIGINT (process interrupt signal) and trigger shutdown
  */
 process.on('SIGINT', function onSigInt() {
     // all done, close the db connection
-    log.info(__filename, 'onSigInt()', 'Got SIGINT - Exiting applicaton...');
+    log.info(__filename, 'onSigInt()', 'Got SIGINT - Exiting application...');
     doShutdown();
 });
 /**
@@ -294,7 +299,7 @@ process.on('SIGINT', function onSigInt() {
  */
 process.on('SIGTERM', function onSigTerm() {
     // all done, close the db connection
-    log.info(__filename, 'onSigTerm()', 'Got SIGTERM - Exiting applicaton...');
+    log.info(__filename, 'onSigTerm()', 'Got SIGTERM - Exiting application...');
     doShutdown();
 });
 /**
